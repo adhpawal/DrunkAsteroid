@@ -1,18 +1,17 @@
 ;
 (function () {
     "use strict";
-
     var Ball = function () {
         this.dx = 10 * (getRandom(0, 1) > 0 ? -1 : 1);
         this.dy = 10 * (getRandom(0, 1) > 0 ? -1 : 1);
-        this.topVal = getRandom(0, 600);
-        this.leftVal = getRandom(0, 1350);
+        this.topVal = getRandom(0, 400);
+        this.leftVal = getRandom(0, 1250);
         this.ballWidth = 50;
         this.ballHeight = 50;
         this.ballDiv
         this.canvas = document.getElementById("astroid-belt");
-        this.canvasHeight = 600;
-        this.canvasWidth = 1350;
+        this.canvasHeight = 400;
+        this.canvasWidth = 1250;
         this.dead = false;
 
         var that = this;
@@ -141,7 +140,7 @@
                 return true;
             }
         }
-    }
+    };
 
     /**
      * This method is responsible for removing provided Element from DOM.
@@ -163,10 +162,10 @@
     }
 
     var ballList = [];
-
+    var setIntervalId;
     function game() {
         gameEngine();
-        setInterval(gameLoop, 50);
+        setIntervalId =setInterval(gameLoop, 50);
     }
 
     /**
@@ -189,11 +188,24 @@
             }
         }
         for (var i = 0; i < tempArray.length; i++) {
-            ballList[i].splice(ballList.indexOf(tempArray[i]), 1);
+            ballList.splice(ballList.indexOf(tempArray[i]), 1);
+        }
+        //Check for the Condition of Success/Failure
+        if(ballList.length == 0){
+            var link = document.getElementById('success');
+            link.style.display = 'block';
+            link.style.visibility = 'visible';
+            clearInterval(setIntervalId);
+            return;
+        }else if(ballList.length == 1){
+            var link = document.getElementById('warn');
+            link.style.display = 'block';
+            link.style.visibility = 'visible';
+            clearInterval(setIntervalId);
+            return;
         }
         for (var i = 0; i < ballList.length; i++) {
             if (ballList[i].dead) {
-
             }
         }
         tempArray = [];
@@ -207,7 +219,7 @@
     function gameEngine() {
         // Creates 99 Balls
         var createNewBall;
-        for (var i = 0; i < 20; i++) {
+        for (var i = 0; i < 100; i++) {
             createNewBall = new Ball();
             createNewBall.createElement();
             ballList.push(createNewBall);
@@ -224,6 +236,17 @@
         if(min==max) return max;
         return (min > max) ? (Math.floor(Math.random() * (min - max + 1)) + max) : (Math.floor(Math.random() * (max - min + 1)) + min);
     }
+
+/*    function resetTheSpace(){
+        var warnMessage = document.getElementById('warn');
+        warnMessage.style.display = 'block';
+        warnMessage.style.visibility = 'hidden';
+        var successMessage = document.getElementById('success');
+        successMessage.style.display = 'block';
+        warnMessage.style.visibility = 'hidden';
+        clearInterval(setIntervalId);
+        game();
+    }*/
     game();
 })();
 
