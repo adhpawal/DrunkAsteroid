@@ -108,24 +108,32 @@
 
         }
         /**
-         * This method is responsible for removing provided Element from DOM..
+         * This method is responsible for removing provided Element from DOM.
          *
+         * Rule :
+         *
+         * Collision is detected if any of four corner of a rectangle falls within the Area of another rectangle.
+         *
+         * @param anotherBall : Ball with which collision is detected
          * @author adhpawal <adhpawal@gmail.com>
          */
         this.checkCollision = function (anotherBall) {
-            var firstBallFirstCorner = that.topVal;
-            var firsBallSecondCorner = that.topVal + that.ballWidth;
-            var firstBallThirdCorner = that.topVal + that.ballHeight;
-            var firstBallFourthCorner = that.leftVal + that.ballWidth + that.ballHeight;
-            var anotherBallFirstCorner = anotherBall.getTopVal();
-            var anotherBallSecondCorner = anotherBall.getTopVal() + anotherBall.getWidth();
-            var anotherBallThirdCorner = anotherBall.getTopVal() + anotherBall.getHeight();
-            var anotherBallFourthCorner = anotherBall.getLeftVal() + anotherBall.getWidth() + anotherBall.getHeight();
-
-            if (checkInside(firstBallFirstCorner, anotherBallFirstCorner, anotherBallSecondCorner, anotherBallThirdCorner, anotherBallFourthCorner) ||
-                checkInside(firsBallSecondCorner, anotherBallFirstCorner, anotherBallSecondCorner, anotherBallThirdCorner, anotherBallFourthCorner) ||
-                checkInside(firstBallThirdCorner, anotherBallFirstCorner, anotherBallSecondCorner, anotherBallThirdCorner, anotherBallFourthCorner) ||
-                checkInside(firstBallFourthCorner, anotherBallFirstCorner, anotherBallSecondCorner, anotherBallThirdCorner, anotherBallFourthCorner)) {
+            var topPlane = that.topVal;
+            var bottomPlane = that.topVal + that.ballHeight;
+            var leftPlane = that.leftVal;
+            var rightPlane = that.leftVal + that.ballHeight;
+            var anotherBallX1 = anotherBall.getLeftVal();
+            var anotherBallY1 = anotherBall.getTopVal();
+            var anotherBallX2 = anotherBall.getLeftVal() + anotherBall.getWidth();
+            var anotherBallY2 = anotherBall.getTopVal();
+            var anotherBallX3 = anotherBall.getLeftVal();
+            var anotherBallY3 = anotherBall.getTopVal() + anotherBall.getHeight();
+            var anotherBallX4 = anotherBall.getLeftVal() + anotherBall.getWidth();
+            var anotherBallY4 = anotherBall.getTopVal() + anotherBall.getHeight();
+            if (checkInside(anotherBallX1, anotherBallY1, topPlane, leftPlane, rightPlane, bottomPlane) ||
+                checkInside(anotherBallX2, anotherBallY2, topPlane, leftPlane, rightPlane, bottomPlane) ||
+                checkInside(anotherBallX3, anotherBallY3, topPlane, leftPlane, rightPlane, bottomPlane) ||
+                checkInside(anotherBallX4, anotherBallY4, topPlane, leftPlane, rightPlane, bottomPlane)) {
                 that.removeFromDom();
                 anotherBall.removeFromDom();
                 that.dead = true;
@@ -138,10 +146,17 @@
     /**
      * This method is responsible for removing provided Element from DOM.
      *
+     * @param pointX : x co-ordinate of a Point
+     * @param pointY : y co-ordinate of a Point
+     * @param topPlane : Min y co-ordinate value of Rectangle surface
+     * @param leftPlane : Min x co-ordinate value of Rectangle surface
+     * @param rightPlane : Max x co-ordinate value of Rectangle surface
+     * @param bottomPlane : Max y co-ordinate value of Rectangle surface
+     *
      * @author adhpawal <adhpawal@gmail.com>
      */
-    function checkInside(currentNode, firstNode, secondNode, thirdNode, fourthNode) {
-        if (currentNode >= firstNode && currentNode <= secondNode && currentNode >= thirdNode && currentNode <= fourthNode) {
+    function checkInside(pointX, pointY, topPlane, leftPlane, rightPlane, bottomPlane) {
+        if ((pointY >= topPlane && pointY <= bottomPlane) && (pointX >= leftPlane && pointX <= rightPlane)) {
             return true;
         }
         return false;
@@ -185,6 +200,7 @@
         for (var i = 0; i < ballList.length; i++) {
             ballList[i].movement();
         }
+
     }
 
     //Create Fixed Number of Objects in Different Domains
@@ -198,9 +214,15 @@
         }
 
     }
-
+    /**
+     * Fetch RanDom number between given range of numbers.
+     * @param min
+     * @param max
+     * @returns {*}
+     */
     function getRandom(min, max) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
+        if(min==max) return max;
+        return (min > max) ? (Math.floor(Math.random() * (min - max + 1)) + max) : (Math.floor(Math.random() * (max - min + 1)) + min);
     }
     game();
 })();
