@@ -1,5 +1,4 @@
-;
-(function () {
+;(function () {
     "use strict";
     var Ball = function () {
         this.dx = 10 * (getRandom(0, 1) > 0 ? -1 : 1);
@@ -236,18 +235,9 @@
         if(min==max) return max;
         return (min > max) ? (Math.floor(Math.random() * (min - max + 1)) + max) : (Math.floor(Math.random() * (max - min + 1)) + min);
     }
-
-/*    function resetTheSpace(){
-        var warnMessage = document.getElementById('warn');
-        warnMessage.style.display = 'block';
-        warnMessage.style.visibility = 'hidden';
-        var successMessage = document.getElementById('success');
-        successMessage.style.display = 'block';
-        warnMessage.style.visibility = 'hidden';
-        clearInterval(setIntervalId);
-        game();
-    }*/
     game();
 })();
+
+
 
 
